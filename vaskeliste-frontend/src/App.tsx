@@ -39,6 +39,7 @@ function App() {
                 setSelectedBookings={setSelectedBookings}
                 existingBookings={existingBookings}
                 setExistingBookings={setExistingBookings}
+                personName={personName}
             />
             <ConfirmBookingButton
                 selectedBookings={selectedBookings}

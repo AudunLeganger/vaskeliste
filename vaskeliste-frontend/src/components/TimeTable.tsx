@@ -11,12 +11,14 @@ interface TimeTableProps {
     setExistingBookings: React.Dispatch<
         React.SetStateAction<ExistingBooking[]>
     >;
+    personName: string;
 }
 
 function TimeTable({
     selectedBookings,
     setSelectedBookings,
     existingBookings,
+    personName,
 }: TimeTableProps) {
     // Define the machine names
 
@@ -72,6 +74,7 @@ function TimeTable({
                                 selectedBookings={selectedBookings}
                                 setSelectedBookings={setSelectedBookings}
                                 existingBookings={existingBookings}
+                                personName={personName}
                             />
                         ))}
                     </tr>

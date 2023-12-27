@@ -10,6 +10,7 @@ interface BookingFieldProps {
         React.SetStateAction<SelectedBooking[]>
     >;
     existingBookings: ExistingBooking[];
+    personName: string;
 }
 
 function BookingField({
@@ -18,8 +19,11 @@ function BookingField({
     selectedBookings, // the list of currently selected bookings
     setSelectedBookings, // the function to update the list of currently selected bookings
     existingBookings, // the list of existing bookings
+    personName, // the name of the person who is booking
 }: BookingFieldProps) {
-    const [selected, setSelected] = useState(false);
+    const [selected, setSelected] = useState(false); // whether the current booking is selected
+
+    // Check if there is an existing booking for the current time slot and machine number
     const existingBooking = existingBookings.find(
         (booking) =>
             booking.timeSlot === timeSlot &&
@@ -27,17 +31,11 @@ function BookingField({
     );
 
     const handleClick = () => {
-        // Check if booking is already booked
-        if (existingBooking) {
-            // Check if the person who booked is the same as the person who is trying to book
-            // If so: Highlight the current booking in red
-            // If not: Return
-        }
-
-        // if so: highlight the current booking in red
-
         // Create booking object
         const booking: SelectedBooking = { timeSlot, machineNumber };
+
+        // If the field is empty and there are no bookings selected for unbooking
+
         let updatedSelectedBookings: SelectedBooking[];
 
         // Check if booking is already selected
