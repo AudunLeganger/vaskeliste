@@ -1,13 +1,23 @@
-import { useState } from "react";
 import BookingField from "./BookingField.tsx";
-import Booking from "../interfaces/Booking.tsx";
+import SelectedBooking from "../interfaces/SelectedBooking.tsx";
+import ExistingBooking from "../interfaces/ExistingBooking.tsx";
 
 interface TimeTableProps {
-    selectedBookings: Booking[];
-    setSelectedBookings: React.Dispatch<React.SetStateAction<Booking[]>>;
+    selectedBookings: SelectedBooking[];
+    setSelectedBookings: React.Dispatch<
+        React.SetStateAction<SelectedBooking[]>
+    >;
+    existingBookings: ExistingBooking[];
+    setExistingBookings: React.Dispatch<
+        React.SetStateAction<ExistingBooking[]>
+    >;
 }
 
-function TimeTable({ selectedBookings, setSelectedBookings }: TimeTableProps) {
+function TimeTable({
+    selectedBookings,
+    setSelectedBookings,
+    existingBookings,
+}: TimeTableProps) {
     // Define the machine names
 
     const machines = [
@@ -54,13 +64,14 @@ function TimeTable({ selectedBookings, setSelectedBookings }: TimeTableProps) {
                 {times.map((time, timeIndex) => (
                     <tr key={timeIndex}>
                         <td>{time}</td>
-                        {machines.map((machine, machineIndex) => (
+                        {machines.map((_machine, machineIndex) => (
                             <BookingField
                                 key={`${timeIndex}-${machineIndex}`}
-                                time={time}
+                                timeSlot={time}
                                 machineNumber={machineIndex + 1}
                                 selectedBookings={selectedBookings}
                                 setSelectedBookings={setSelectedBookings}
+                                existingBookings={existingBookings}
                             />
                         ))}
                     </tr>

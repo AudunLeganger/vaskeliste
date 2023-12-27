@@ -1,24 +1,39 @@
-import { useEffect, useState } from "react";
-import Booking from "../interfaces/Booking.tsx";
+import { useState } from "react";
+import SelectedBooking from "../interfaces/SelectedBooking.tsx";
+import ExistingBooking from "../interfaces/ExistingBooking.tsx";
 
 interface BookingFieldProps {
-    time: string;
+    timeSlot: string;
     machineNumber: number;
-    selectedBookings: Booking[];
-    setSelectedBookings: React.Dispatch<React.SetStateAction<Booking[]>>;
+    selectedBookings: SelectedBooking[];
+    setSelectedBookings: React.Dispatch<
+        React.SetStateAction<SelectedBooking[]>
+    >;
+    existingBookings: ExistingBooking[];
 }
 
 function BookingField({
-    time,
+    timeSlot,
     machineNumber,
     selectedBookings,
     setSelectedBookings,
+    existingBookings,
 }: BookingFieldProps) {
     const [selected, setSelected] = useState(false);
 
+    const existingBooking = existingBookings.find(
+        (booking) =>
+            booking.timeSlot === timeSlot &&
+            booking.machineNumber === machineNumber
+    );
+
     const handleClick = () => {
-        const booking: Booking = { time, machineNumber };
-        let updatedSelectedBookings: Booking[];
+        // Check if booking is already booked
+        if (existingBooking) return;
+
+        // Create booking object
+        const booking: SelectedBooking = { timeSlot, machineNumber };
+        let updatedSelectedBookings: SelectedBooking[];
 
         // Check if booking is already selected
         if (!selected) {
@@ -28,18 +43,27 @@ function BookingField({
             // Remove booking from selectedBookings array
             updatedSelectedBookings = selectedBookings.filter(
                 (selectedBooking) =>
-                    selectedBooking.time !== booking.time ||
+                    selectedBooking.timeSlot !== booking.timeSlot ||
                     selectedBooking.machineNumber !== booking.machineNumber
             );
         }
+
+        // Update selectedBookings
         setSelectedBookings(() => updatedSelectedBookings);
         setSelected(!selected);
     };
 
     const style = {
-        backgroundColor: selected ? "green" : "white",
+        color: "black",
+        backgroundColor: existingBooking
+            ? "white"
+            : selected
+            ? "green"
+            : "white",
+        width: "10em",
+        height: "2em",
+        overflow: "hidden",
         border: "2px solid black",
-        padding: "10px",
     };
 
     return (
@@ -47,7 +71,9 @@ function BookingField({
             className={selected ? "selected" : ""}
             onClick={handleClick}
             style={style}
-        ></td>
+        >
+            {existingBooking ? existingBooking.personName : ""}
+        </td>
     );
 }
 

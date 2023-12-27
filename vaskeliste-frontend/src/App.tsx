@@ -2,7 +2,8 @@ import { useState } from "react";
 import Datefield from "./components/Datefield.tsx";
 import TimeTable from "./components/TimeTable.tsx";
 import ConfirmBookingButton from "./components/ConfirmBookingButton.tsx";
-import Booking from "./interfaces/Booking.tsx";
+import SelectedBooking from "./interfaces/SelectedBooking.tsx";
+import ExistingBooking from "./interfaces/ExistingBooking.tsx";
 
 function App() {
     const titleString: string = "Vaskeriliste".toUpperCase();
@@ -13,7 +14,14 @@ function App() {
 
     const personName: string = "Ola Nordmann";
 
-    const [selectedBookings, setSelectedBookings] = useState<Booking[]>([]);
+    // TODO: Get bookings from backend
+
+    const [selectedBookings, setSelectedBookings] = useState<SelectedBooking[]>(
+        []
+    );
+    const [existingBookings, setExistingBookings] = useState<ExistingBooking[]>(
+        []
+    );
 
     return (
         <>
@@ -24,8 +32,16 @@ function App() {
             <TimeTable
                 selectedBookings={selectedBookings}
                 setSelectedBookings={setSelectedBookings}
+                existingBookings={existingBookings}
+                setExistingBookings={setExistingBookings}
             />
-            <ConfirmBookingButton />
+            <ConfirmBookingButton
+                selectedBookings={selectedBookings}
+                setSelectedBookings={setSelectedBookings}
+                existingBookings={existingBookings}
+                setExistingBookings={setExistingBookings}
+                personName={personName}
+            />
         </>
     );
 }
