@@ -13,14 +13,13 @@ interface BookingFieldProps {
 }
 
 function BookingField({
-    timeSlot,
-    machineNumber,
-    selectedBookings,
-    setSelectedBookings,
-    existingBookings,
+    timeSlot, // the current time slot
+    machineNumber, // the current machine number
+    selectedBookings, // the list of currently selected bookings
+    setSelectedBookings, // the function to update the list of currently selected bookings
+    existingBookings, // the list of existing bookings
 }: BookingFieldProps) {
     const [selected, setSelected] = useState(false);
-
     const existingBooking = existingBookings.find(
         (booking) =>
             booking.timeSlot === timeSlot &&
@@ -29,7 +28,13 @@ function BookingField({
 
     const handleClick = () => {
         // Check if booking is already booked
-        if (existingBooking) return;
+        if (existingBooking) {
+            // Check if the person who booked is the same as the person who is trying to book
+            // If so: Highlight the current booking in red
+            // If not: Return
+        }
+
+        // if so: highlight the current booking in red
 
         // Create booking object
         const booking: SelectedBooking = { timeSlot, machineNumber };

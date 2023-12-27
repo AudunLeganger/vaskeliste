@@ -33,7 +33,12 @@ function ConfirmBookingButton({
 
     return (
         <>
-            <button onClick={handleClick}>Confirm Booking</button>
+            <button
+                onClick={handleClick}
+                disabled={selectedBookings.length === 0}
+            >
+                Bekreft booking
+            </button>
         </>
     );
 }
