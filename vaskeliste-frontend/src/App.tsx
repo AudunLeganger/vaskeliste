@@ -13,16 +13,16 @@ function App() {
     const instructionString2: string =
         "Maskiner kan kapres fem minutter over, men merk at ingen maskiner skal startes senere enn ti minutter over. Se for øvrig retningslinjene på veggen. Sett ring:".toUpperCase();
 
-    // TODO: Get bookings from backend
-
     const [selectedBookings, setSelectedBookings] = useState<SelectedBooking[]>(
         []
-    );
+    ); // the list of currently selected bookings
     const [existingBookings, setExistingBookings] = useState<ExistingBooking[]>(
         []
-    );
+    ); // the list of existing bookings
     const [personName, setPersonName] = useState<string>("Ola Nordmann");
 
+    const [bookingMode, setBookingMode] = useState<boolean>(true);
+    // bookingMode is true if the user is in the process of booking, false if unbooking
     return (
         <>
             <h1>{titleString}</h1>
@@ -38,7 +38,8 @@ function App() {
                 selectedBookings={selectedBookings}
                 setSelectedBookings={setSelectedBookings}
                 existingBookings={existingBookings}
-                setExistingBookings={setExistingBookings}
+                bookingMode={bookingMode}
+                setBookingMode={setBookingMode}
                 personName={personName}
             />
             <ConfirmBookingButton

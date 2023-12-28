@@ -8,20 +8,20 @@ interface TimeTableProps {
         React.SetStateAction<SelectedBooking[]>
     >;
     existingBookings: ExistingBooking[];
-    setExistingBookings: React.Dispatch<
-        React.SetStateAction<ExistingBooking[]>
-    >;
     personName: string;
+    bookingMode: boolean;
+    setBookingMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function TimeTable({
     selectedBookings,
     setSelectedBookings,
     existingBookings,
+    setBookingMode,
     personName,
+    bookingMode,
 }: TimeTableProps) {
     // Define the machine names
-
     const machines = [
         "Maskin 1",
         "Maskin 2",
@@ -74,7 +74,9 @@ function TimeTable({
                                 selectedBookings={selectedBookings}
                                 setSelectedBookings={setSelectedBookings}
                                 existingBookings={existingBookings}
-                                personName={personName}
+                                inputPersonName={personName}
+                                bookingMode={bookingMode}
+                                setBookingMode={setBookingMode}
                             />
                         ))}
                     </tr>
