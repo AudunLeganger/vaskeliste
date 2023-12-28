@@ -48,6 +48,7 @@ function App() {
                 existingBookings={existingBookings}
                 setExistingBookings={setExistingBookings}
                 personName={personName}
+                bookingMode={bookingMode}
             />
         </>
     );

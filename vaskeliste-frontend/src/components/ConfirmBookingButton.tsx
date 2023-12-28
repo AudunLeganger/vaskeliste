@@ -1,5 +1,6 @@
 import SelectedBooking from "../interfaces/SelectedBooking.tsx";
 import ExistingBooking from "../interfaces/ExistingBooking.tsx";
+import useBookings from "../hooks/useBookings.tsx";
 
 interface ConfirmBookingButtonProps {
     selectedBookings: SelectedBooking[];
@@ -7,6 +8,7 @@ interface ConfirmBookingButtonProps {
     existingBookings: ExistingBooking[];
     setExistingBookings: (bookings: ExistingBooking[]) => void;
     personName: string;
+    bookingMode: boolean;
 }
 
 function ConfirmBookingButton({
@@ -15,7 +17,9 @@ function ConfirmBookingButton({
     existingBookings,
     setExistingBookings,
     personName,
+    bookingMode,
 }: ConfirmBookingButtonProps) {
+    const { sendBookingsToBackend, status } = useBookings();
     const handleClick = () => {
         // Add personName to each booking in selectedBookings
         const updatedSelectedBookings = selectedBookings.map(
@@ -23,6 +27,9 @@ function ConfirmBookingButton({
                 return { ...selectedBooking, personName };
             }
         );
+
+        // Send selectedBookings to backend
+        sendBookingsToBackend(updatedSelectedBookings);
 
         // Add selectedBookings to existingBookings
         setExistingBookings([...existingBookings, ...updatedSelectedBookings]);
@@ -37,7 +44,7 @@ function ConfirmBookingButton({
                 onClick={handleClick}
                 disabled={selectedBookings.length === 0}
             >
-                Bekreft booking
+                {bookingMode ? "Bekreft booking" : "Bekreft avbooking"}
             </button>
         </>
     );
