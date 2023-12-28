@@ -70,7 +70,6 @@ function BookingField({
             }
             setSelected(true);
             setSelectedBookings((prev) => [...prev, booking]);
-            console.log("return line 75");
             return;
         }
 
@@ -95,13 +94,11 @@ function BookingField({
             if (selectedBookings.length === 0) {
                 setBookingMode(true);
             }
-            console.log("return line 93");
             return;
         }
 
         // If the field is empty but the user is in the process of unbooking, or the field is booked by the current user but the user is in the process of booking
         if ((!existingBooking && !bookingMode) || (ownBooking && bookingMode)) {
-            console.log("return line 99");
             return;
         }
 
