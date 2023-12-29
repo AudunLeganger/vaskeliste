@@ -95,7 +95,7 @@ function ConfirmBookingButton() {
 
     function handleClick() {
         if (bookingMode) {
-            performBookingLocal();
+            performBooking();
         } else {
             performUnbookingLocal();
         }

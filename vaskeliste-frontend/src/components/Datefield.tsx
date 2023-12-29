@@ -1,9 +1,21 @@
+import { memo, useCallback, useEffect } from "react";
 import { useBookingContext } from "../contexts/BookingContext";
+import useBookings from "../hooks/useBookings";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 function Datefield() {
-    const { selectedDateString, setSelectedDateString } = useBookingContext();
+    const { selectedDateString, setSelectedDateString, setSelectedBookings } =
+        useBookingContext();
+    const { fetchBookings } = useBookings();
+
+    const memorizedFetchBookings = useCallback(fetchBookings, []);
+
+    useEffect(() => {
+        if (selectedDateString) {
+            memorizedFetchBookings(selectedDateString);
+        }
+    }, [selectedDateString, memorizedFetchBookings]);
 
     const handleDateChange = (date: Date) => {
         const dateString = date.toISOString().split("T")[0];
@@ -13,9 +25,17 @@ function Datefield() {
         setSelectedDateString(() => dateString);
 
         // Clear selectedBookings
-        // setSelectedBookings(() => []);
+        setSelectedBookings(() => []);
         // Fetch bookings for the new date from backend
+        memorizedFetchBookings(dateString);
     };
+
+    useEffect(() => {
+        console.log(selectedDateString);
+        if (selectedDateString) {
+            memorizedFetchBookings(selectedDateString);
+        }
+    }, [memorizedFetchBookings]);
 
     const thisDate = new Date();
 

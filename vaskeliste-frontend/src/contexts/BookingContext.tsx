@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import Booking, { SelectedBooking } from "../interfaces/Booking";
+import { useEffect } from "react";
 
 interface BookingContextValue {
     selectedBookings: SelectedBooking[];
@@ -46,6 +47,10 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
         new Date().toISOString().split("T")[0]
     );
     const [bookingMode, setBookingMode] = useState<boolean>(true);
+
+    useEffect(() => {
+        console.log("BookingContext rendered");
+    }, []);
 
     return (
         <BookingContext.Provider

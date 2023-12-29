@@ -18,7 +18,6 @@ function BookingField({
         bookingMode,
         setBookingMode,
     } = useBookingContext();
-
     // If it exists, get an existing booking for the current time slot and machine number
     const isExistingBooking = existingBookings.some(
         (booking) =>
