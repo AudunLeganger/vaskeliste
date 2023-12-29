@@ -2,7 +2,7 @@ interface Booking {
     timeSlot: string;
     machineNumber: number;
     personName: string;
-    date: string;
+    dateString: string;
 }
 
 export interface SelectedBooking {
