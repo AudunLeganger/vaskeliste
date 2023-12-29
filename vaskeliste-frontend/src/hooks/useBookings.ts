@@ -1,33 +1,40 @@
 import { useState } from "react";
-import SelectedBooking from "../interfaces/SelectedBooking.ts";
+import Booking from "../interfaces/Booking";
+import { useBookingContext } from "../contexts/BookingContext";
+
+
 function useBookings() {
     const [status, setStatus] = useState<string>("idle");
+    const { setExistingBookings } = useBookingContext();
     
-    function sendBookingsToBackend(selectedBookings: SelectedBooking[]) {
-        if (selectedBookings.length === 0) {
+    async function updateAndFetchBookings(bookings: Booking[]) {
+        // Check if there are any bookings to update
+        if (bookings.length === 0) {
             return;
         }
         setStatus("loading");
         const url = 'http://localhost:3000/bookings';
-        fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ bookings: selectedBookings })
-        })
-        .then((response) => {
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ bookings })               
+            });
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.statusText}`);
             }
+            const updatedBookings = await response.json();
+            setExistingBookings(updatedBookings);
             setStatus("success");
-        })
-        .catch((e) => {
+        } catch(e) {
             console.log(e);
             setStatus("error");
-        });
+        }
     }
-    return { sendBookingsToBackend, status};
+    return { updateAndFetchBookings, status};
 }
 
 export default useBookings;

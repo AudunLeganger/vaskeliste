@@ -10,8 +10,8 @@ interface BookingContextValue {
     setExistingBookings: React.Dispatch<React.SetStateAction<Booking[]>>;
     personName: string;
     setPersonName: React.Dispatch<React.SetStateAction<string>>;
-    selectedDate: string;
-    setSelectedDate: React.Dispatch<React.SetStateAction<string>>;
+    selectedDateString: string;
+    setSelectedDateString: React.Dispatch<React.SetStateAction<string>>;
     bookingMode: boolean;
     setBookingMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -42,7 +42,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
     );
     const [existingBookings, setExistingBookings] = useState<Booking[]>([]);
     const [personName, setPersonName] = useState<string>("Ola Nordmann");
-    const [selectedDate, setSelectedDate] = useState<string>("");
+    const [selectedDateString, setSelectedDateString] = useState<string>(
+        new Date().toISOString().split("T")[0]
+    );
     const [bookingMode, setBookingMode] = useState<boolean>(true);
 
     return (
@@ -54,8 +56,8 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
                 setExistingBookings,
                 personName,
                 setPersonName,
-                selectedDate,
-                setSelectedDate,
+                selectedDateString,
+                setSelectedDateString,
                 bookingMode,
                 setBookingMode,
             }}
