@@ -25,6 +25,8 @@ app.post("/bookingsForDate", (req: Request, res: Response) => {
 app.post("/bookings", (req: Request, res: Response) => {
     const newBookings = req.body.bookings;
     // Filtering out bookings where machine and time slot is already booked
+    newBookings.filter((newBooking: { machineNumber: number; timeSlot: string; }) => !existingBookings.some(existingBooking => newBooking.machineNumber == existingBooking.machineNumber && newBooking.timeSlot == existingBooking.timeSlot));
+    /*
     for (const newBooking of newBookings) {
         for (const existingBooking of existingBookings) {
             if (newBooking.machineNumber == existingBooking.machineNumber && newBooking.timeSlot == existingBooking.timeSlot) {
@@ -32,7 +34,7 @@ app.post("/bookings", (req: Request, res: Response) => {
                 return res.status(400).send("Booking conflict at machine " + newBooking.machine + " and time slot " + newBooking.timeSlot + ".");
             }
         }
-    }
+    }*/
 
     // log new bookings in readable format
     for (const newBooking of newBookings) {
