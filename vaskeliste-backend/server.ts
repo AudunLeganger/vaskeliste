@@ -7,12 +7,12 @@ const port = 3000;
 app.use(cors())
 app.use(express.json());
 
-app.get("/test", (req: Request, res: Response) => {
+app.get("/bookings", (req: Request, res: Response) => {
     res.send("Hello from the backend!");
 });
 
-app.post("/test", (req: Request, res: Response) => {
-    console.log(req.body.bookings);
+app.post("/bookings", (req: Request, res: Response) => {
+    console.log(req.body);
     res.send("Hello from the backend!");
 });
 
