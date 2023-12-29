@@ -1,17 +1,8 @@
 import React from "react";
-import SelectedBooking from "../interfaces/SelectedBooking";
+import { useBookingContext } from "../contexts/BookingContext";
 
-interface NameInputProps {
-    personName: string;
-    setPersonName: (name: string) => void;
-    selectedBookings: SelectedBooking[];
-}
-
-function NameInput({
-    personName,
-    setPersonName,
-    selectedBookings,
-}: NameInputProps) {
+function NameInput() {
+    const { personName, setPersonName, selectedBookings } = useBookingContext();
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPersonName(event.target.value);
     };

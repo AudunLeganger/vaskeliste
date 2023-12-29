@@ -1,75 +1,70 @@
-import { useState } from "react";
-import SelectedBooking from "../interfaces/SelectedBooking.tsx";
-import ExistingBooking from "../interfaces/ExistingBooking.tsx";
+import { useBookingContext } from "../contexts/BookingContext";
 
 interface BookingFieldProps {
     timeSlot: string;
     machineNumber: number;
-    selectedBookings: SelectedBooking[];
-    setSelectedBookings: React.Dispatch<
-        React.SetStateAction<SelectedBooking[]>
-    >;
-    bookingMode: boolean;
-    setBookingMode: React.Dispatch<React.SetStateAction<boolean>>;
-    existingBookings: ExistingBooking[];
-    inputPersonName: string;
 }
 
 function BookingField({
     timeSlot, // the current time slot
     machineNumber, // the current machine number
-    selectedBookings, // the list of currently selected bookings
-    setSelectedBookings, // the function to update the list of currently selected bookings
-    existingBookings, // the list of existing bookings
-    inputPersonName, // the name of the person who is booking
-    bookingMode,
-    setBookingMode,
 }: BookingFieldProps) {
-    const [selected, setSelected] = useState(false); // whether the current booking is selected
-    const [selectedUnbooking, setSelectedUnbooking] = useState(false); // whether the current field is selected for unbooking
+    // Get the selectedBookings array and the setSelectedBookings function from the BookingContext
+    const {
+        selectedBookings,
+        setSelectedBookings,
+        existingBookings,
+        personName: inputPersonName,
+        bookingMode,
+        setBookingMode,
+    } = useBookingContext();
 
     // If it exists, get an existing booking for the current time slot and machine number
-    const existingBooking = existingBookings.find(
+    const isExistingBooking = existingBookings.some(
         (booking) =>
             booking.timeSlot === timeSlot &&
             booking.machineNumber === machineNumber
     );
 
     // If the current user has booked this slot, this point to this booking
-    const ownBooking = existingBookings.find(
+    const isOwnBooking = existingBookings.some(
         (booking) =>
             booking.timeSlot === timeSlot &&
             booking.machineNumber === machineNumber &&
             booking.personName === inputPersonName
     );
 
+    const existingBooking = existingBookings.find(
+        (booking) =>
+            booking.timeSlot === timeSlot &&
+            booking.machineNumber === machineNumber
+    );
+
+    const isSelected = selectedBookings.find(
+        (booking) =>
+            booking.timeSlot === timeSlot &&
+            booking.machineNumber === machineNumber
+    );
+
     const handleClick = () => {
-        console.log(selectedBookings);
-        console.log(selectedUnbooking);
-        if (existingBooking && !ownBooking) {
+        if (isExistingBooking && !isOwnBooking) {
             // Case: The field is booked by another user
             // Expected behavior: Do nothing
             return;
         }
 
-        // Create booking object
-        const booking: SelectedBooking = { timeSlot, machineNumber };
-
+        const thisBooking = { timeSlot, machineNumber };
         // If there are no existing bookings selected
         if (selectedBookings.length === 0) {
             // If the field is empty, the user is in the process of booking
-            if (!existingBooking) {
-                setSelectedUnbooking(false);
+            if (!isExistingBooking) {
                 setBookingMode(true);
             }
             // If the field is booked by the current user, the user is in the process of unbooking
-            else if (ownBooking) {
-                console.log("Unbooking: field is EMPTY, user is unbooking");
-                setSelectedUnbooking(true);
+            else if (isOwnBooking) {
                 setBookingMode(false);
             }
-            setSelected(true);
-            setSelectedBookings((prev) => [...prev, booking]);
+            setSelectedBookings((prev) => [...prev, thisBooking]);
             return;
         }
 
@@ -77,17 +72,15 @@ function BookingField({
         if (
             selectedBookings.some(
                 (booking) =>
-                    booking.timeSlot === timeSlot &&
-                    booking.machineNumber === machineNumber
+                    thisBooking.machineNumber === booking.machineNumber &&
+                    thisBooking.timeSlot === booking.timeSlot
             )
         ) {
-            setSelectedUnbooking(false);
-            setSelected(false);
             setSelectedBookings((prev) =>
                 prev.filter(
-                    (b) =>
-                        b.timeSlot !== booking.timeSlot ||
-                        b.machineNumber !== booking.machineNumber
+                    (booking) =>
+                        booking.machineNumber !== thisBooking.machineNumber ||
+                        booking.timeSlot !== thisBooking.timeSlot
                 )
             );
             // If there are no selected bookings left, bookingMode is set to true
@@ -98,19 +91,21 @@ function BookingField({
         }
 
         // If the field is empty but the user is in the process of unbooking, or the field is booked by the current user but the user is in the process of booking
-        if ((!existingBooking && !bookingMode) || (ownBooking && bookingMode)) {
+        // Expected behavior: Do nothing
+        if (
+            (!isExistingBooking && !bookingMode) ||
+            (isOwnBooking && bookingMode)
+        ) {
             return;
         }
 
         // If the field is empty and the user is in the process of booking, or the field is booked by the current user and the user is in the process of unbooking
-        if ((!existingBooking && bookingMode) || (ownBooking && !bookingMode)) {
-            if (ownBooking && !bookingMode) {
-                setSelectedUnbooking(true);
-            } else {
-                setSelectedUnbooking(false);
-            }
-            setSelected(true);
-            setSelectedBookings((prev) => [...prev, booking]);
+        // Expected behavior: Select the field for booking / unbooking
+        if (
+            (!isExistingBooking && bookingMode) ||
+            (isOwnBooking && !bookingMode)
+        ) {
+            setSelectedBookings((prev) => [...prev, thisBooking]);
         }
 
         /*
@@ -186,13 +181,14 @@ function BookingField({
 
     const style = {
         color: "black",
-        backgroundColor: selectedUnbooking
-            ? "red"
-            : existingBooking
-            ? "white"
-            : selected
-            ? "green"
-            : "white",
+        backgroundColor:
+            isSelected && !bookingMode
+                ? "red"
+                : isExistingBooking
+                ? "white"
+                : isSelected && bookingMode
+                ? "green"
+                : "white",
         width: "10em",
         height: "2em",
         overflow: "hidden",
@@ -201,7 +197,7 @@ function BookingField({
 
     return (
         <td
-            className={selected ? "selected" : ""}
+            className={isSelected ? "selected" : ""}
             onClick={handleClick}
             style={style}
         >

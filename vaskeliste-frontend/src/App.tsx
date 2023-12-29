@@ -1,10 +1,8 @@
-import { useState } from "react";
+import { BookingProvider } from "./contexts/BookingContext";
 import Datefield from "./components/Datefield.tsx";
 import NameInput from "./components/NameInput.tsx";
 import TimeTable from "./components/TimeTable.tsx";
 import ConfirmBookingButton from "./components/ConfirmBookingButton.tsx";
-import SelectedBooking from "./interfaces/SelectedBooking.tsx";
-import ExistingBooking from "./interfaces/ExistingBooking.tsx";
 
 function App() {
     const titleString: string = "Vaskeriliste".toUpperCase();
@@ -13,43 +11,17 @@ function App() {
     const instructionString2: string =
         "Maskiner kan kapres fem minutter over, men merk at ingen maskiner skal startes senere enn ti minutter over. Se for øvrig retningslinjene på veggen. Sett ring:".toUpperCase();
 
-    const [selectedBookings, setSelectedBookings] = useState<SelectedBooking[]>(
-        []
-    ); // the list of currently selected bookings
-    const [existingBookings, setExistingBookings] = useState<ExistingBooking[]>(
-        []
-    ); // the list of existing bookings
-    const [personName, setPersonName] = useState<string>("Ola Nordmann");
-
-    const [bookingMode, setBookingMode] = useState<boolean>(true);
-    // bookingMode is true if the user is in the process of booking, false if unbooking
     return (
         <>
-            <h1>{titleString}</h1>
-            <p>{instructionString1}</p>
-            <p>{instructionString2}</p>
-            <Datefield />
-            <NameInput
-                personName={personName}
-                setPersonName={setPersonName}
-                selectedBookings={selectedBookings}
-            />
-            <TimeTable
-                selectedBookings={selectedBookings}
-                setSelectedBookings={setSelectedBookings}
-                existingBookings={existingBookings}
-                bookingMode={bookingMode}
-                setBookingMode={setBookingMode}
-                personName={personName}
-            />
-            <ConfirmBookingButton
-                selectedBookings={selectedBookings}
-                setSelectedBookings={setSelectedBookings}
-                existingBookings={existingBookings}
-                setExistingBookings={setExistingBookings}
-                personName={personName}
-                bookingMode={bookingMode}
-            />
+            <BookingProvider>
+                <h1>{titleString}</h1>
+                <p>{instructionString1}</p>
+                <p>{instructionString2}</p>
+                <Datefield />
+                <NameInput />
+                <TimeTable />
+                <ConfirmBookingButton />
+            </BookingProvider>
         </>
     );
 }
