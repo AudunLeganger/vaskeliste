@@ -1,0 +1,38 @@
+POST http://localhost:3000/bookings
+Content-Type: application/json
+
+{
+    "bookings":
+    [
+        {
+            "timeSlot": "10-11",
+            "machineNumber": 1,
+            "personName": "Audun Leganger",
+            "dateString": "2023-12-29"
+        },
+                {
+            "timeSlot": "10-11",
+            "machineNumber": 3,
+            "personName": "Audun Leganger",
+            "dateString": "2023-12-29"
+        },
+                {
+            "timeSlot": "10-11",
+            "machineNumber": 2,
+            "personName": "Audun Leganger",
+            "dateString": "2023-12-29"
+        },
+                {
+            "timeSlot": "10-11",
+            "machineNumber": 4,
+            "personName": "Audun Leganger",
+            "dateString": "2023-12-29"
+        },
+                {
+            "timeSlot": "10-11",
+            "machineNumber": 5,
+            "personName": "Audun Leganger",
+            "dateString": "2023-12-29"
+        }
+    ]
+} 
