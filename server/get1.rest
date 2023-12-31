@@ -1,2 +1,2 @@
-GET http://localhost:3000/bookings?date=2023-12-31
+GET http://localhost:3000/bookings?date=2023-12-29
 Content-Type: application/json

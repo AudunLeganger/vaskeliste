@@ -1,0 +1,20 @@
+DELETE http://localhost:3000/bookings
+Content-Type: application/json
+
+{
+    "clientPersonName": "Ola Nordmann",
+    "bookings": [
+        {
+            "timeSlot": "10-11",
+            "machineNumber": 3,
+            "personName": "Ola Nordmann",
+            "dateString": "2023-12-29"
+        },
+        {
+            "timeSlot": "10-11",
+            "machineNumber": 2,
+            "personName": "Ola Nordmann",
+            "dateString": "2023-12-29"
+        }
+    ]
+}
