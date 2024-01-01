@@ -1,4 +1,6 @@
 import express, { Request, Response } from "express";
+import http from "http";
+import { Server } from "socket.io";
 import cors from "cors";
 
 interface Booking {
@@ -34,11 +36,15 @@ let existingBookings: Booking[] = [];
 
 const app = express();
 const port = 3000;
+
+const server = http.createServer(app);
+const io = new Server(server);
 app.use(cors())
 app.use(express.json());
 
 // Request to get all bookings for a given date
 app.get("/bookings", (req: Request, res: Response) => {
+    console.log("Get request recieved")
     const selectedDateString: string = req.query.date as string;
     const bookingsOnSelectedDate: Booking[] = existingBookings.filter(booking => booking.dateString === selectedDateString);
     res.status(200).send(bookingsOnSelectedDate);
@@ -46,6 +52,7 @@ app.get("/bookings", (req: Request, res: Response) => {
 
 // Request to add a set of bookings to the server
 app.post("/bookings", (req: Request, res: Response) => {
+    console.log("Post request recieved")
     const recievedBookings = req.body.bookings;
     const nonConflictingBookings = filterNonConflictingBookings(recievedBookings, existingBookings);
 
@@ -62,11 +69,13 @@ app.post("/bookings", (req: Request, res: Response) => {
         res.status(201).send( { bookings : nonConflictingBookings })
     }
     existingBookings = [...existingBookings, ...nonConflictingBookings];
+
+    io.emit("newBookings", nonConflictingBookings)
 });
 
 // Request to delete a set of bookings from the server
 app.delete("/bookings", (req: Request, res: Response) => {
-    console.log("DELETE")
+    console.log("Delete request recieved")
     const clientPersonName = req.body.clientPersonName;
     const  recievedBookings = req.body.bookings;
     // Get the stored bookings that are at the same time as the recieved bookings
@@ -74,12 +83,6 @@ app.delete("/bookings", (req: Request, res: Response) => {
     // Filter out the bookings that are made by the client
     const bookingsToRemove = bookingsAtSameTime.filter(booking => booking.personName === clientPersonName);
 
-    console.log("Recieved Bookings:")
-    printBookingArray(recievedBookings);
-    console.log("\nBookings at same time:")
-    printBookingArray(bookingsAtSameTime);
-    console.log("\nBookings to remove:")
-    printBookingArray(bookingsToRemove);
     if (bookingsToRemove.length === 0) {
         // If no bookings match existing bookings under client name, send an error
         res.status(404).send({ bookings: [] });
