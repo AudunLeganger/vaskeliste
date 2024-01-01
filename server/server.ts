@@ -45,9 +45,7 @@ app.use(express.json());
 // Request to get all bookings for a given date
 app.get("/bookings", (req: Request, res: Response) => {
     console.log("Get request recieved")
-    const selectedDateString: string = req.query.date as string;
-    const bookingsOnSelectedDate: Booking[] = existingBookings.filter(booking => booking.dateString === selectedDateString);
-    res.status(200).send(bookingsOnSelectedDate);
+    res.status(200).send(existingBookings);
 });
 
 // Request to add a set of bookings to the server

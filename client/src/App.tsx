@@ -5,10 +5,6 @@ import TimeTable from "./components/TimeTable.tsx";
 import ConfirmBookingButton from "./components/ConfirmBookingButton.tsx";
 
 function App() {
-    // Fetch bookings from backend
-
-    // Fetch bookings from backend on first render
-
     const titleString: string = "Vaskeriliste".toUpperCase();
     const instructionString1: string =
         "Skriv deg opp på listen for å reservere vasketimer. Maksimalt en uke i forveien.".toUpperCase();

@@ -10,11 +10,8 @@ function Datefield() {
     const { fetchBookings } = useBookings();
 
     useEffect(() => {
-        console.log(selectedDateString);
-        if (selectedDateString) {
-            fetchBookings(selectedDateString);
-        }
-    }, [selectedDateString]);
+        fetchBookings();
+    }, []);
 
     const handleDateChange = (date: Date) => {
         const dateString = date.toISOString().split("T")[0];
@@ -25,15 +22,12 @@ function Datefield() {
 
         // Clear selectedBookings
         setSelectedBookings(() => []);
-
-        // Fetch bookings for the new date from backend
-        fetchBookings(dateString);
     };
 
     const thisDate = new Date();
 
-    const oneMonthAgo = new Date();
-    oneMonthAgo.setMonth(thisDate.getMonth() - 1);
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(thisDate.getDate() - 7);
 
     const oneWeekAhead = new Date();
     oneWeekAhead.setDate(thisDate.getDate() + 7);
@@ -44,7 +38,7 @@ function Datefield() {
             <DatePicker
                 selected={new Date(selectedDateString)}
                 onChange={handleDateChange}
-                minDate={oneMonthAgo}
+                minDate={oneWeekAgo}
                 maxDate={oneWeekAhead}
                 calendarStartDay={1}
             />

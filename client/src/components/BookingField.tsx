@@ -15,6 +15,7 @@ function BookingField({
         setSelectedBookings,
         existingBookings,
         personName: inputPersonName,
+        selectedDateString,
         bookingMode,
         setBookingMode,
     } = useBookingContext();
@@ -22,7 +23,8 @@ function BookingField({
     const isExistingBooking = existingBookings.some(
         (booking) =>
             booking.timeSlot === timeSlot &&
-            booking.machineNumber === machineNumber
+            booking.machineNumber === machineNumber &&
+            booking.dateString === selectedDateString
     );
 
     // If the current user has booked this slot, this point to this booking
@@ -30,13 +32,15 @@ function BookingField({
         (booking) =>
             booking.timeSlot === timeSlot &&
             booking.machineNumber === machineNumber &&
+            booking.dateString === selectedDateString &&
             booking.personName === inputPersonName
     );
 
     const existingBooking = existingBookings.find(
         (booking) =>
             booking.timeSlot === timeSlot &&
-            booking.machineNumber === machineNumber
+            booking.machineNumber === machineNumber &&
+            booking.dateString === selectedDateString
     );
 
     const isSelected = selectedBookings.find(
@@ -106,76 +110,6 @@ function BookingField({
         ) {
             setSelectedBookings((prev) => [...prev, thisBooking]);
         }
-
-        /*
-        // If the field is empty and there are no existing bookings selected
-        if (!existingBooking && selectedBookings.length === 0) {
-            // Case: The field is empty and there are no existing bookings selected
-            // Expected behavior: Select the field for booking
-            setIsBooking(true);
-            setSelected(true);
-            setSelectedBookings((prev) => [...prev, booking]);
-            return;
-        }
-
-        // If the field is booked by the current user and no empty fields are selected for booking
-        if (ownBooking && selectedBookings.length === 0) {
-            // Case: The field is booked by the current user and no empty fields are selected for booking
-            // Expected behavior: Select the field for UNbooking
-            setIsBooking(false);
-            setSelected(true);
-            setSelectedBookings((prev) => [...prev, booking]);
-            return;
-        }
-
-        // If the field is already selected for unbooking, deselect it
-        if (ownBooking && selected) {
-            setSelected(false);
-            setSelectedBookings((prev) =>
-                prev.filter(
-                    (b) =>
-                        b.timeSlot !== booking.timeSlot ||
-                        b.machineNumber !== booking.machineNumber
-                )
-            );
-            return;
-        }
-
-        // If the field is empty but the user is in the process of unbooking, or
-        // the field is booked by the current user but the user is in the process of booking
-        if ((!existingBooking && !isBooking) || (ownBooking && isBooking)) {
-            return;
-        }
-
-        // If the field is empty and the user is in the process of booking, or
-        // the field is booked by the current user and the user is in the process of unbooking
-        if ((!existingBooking && isBooking) || (ownBooking && !isBooking)) {
-            setSelected(true);
-            setSelectedBookings((prev) => [...prev, booking]);
-        }
-        //END */
-
-        // OLD CODE
-        /* 
-        let updatedSelectedBookings: SelectedBooking[];
-
-        // Check if booking is already selected
-        if (!selected) {
-            // Add booking to selectedBookings array
-            updatedSelectedBookings = [...selectedBookings, booking];
-        } else {
-            // Remove booking from selectedBookings array
-            updatedSelectedBookings = selectedBookings.filter(
-                (selectedBooking) =>
-                    selectedBooking.timeSlot !== booking.timeSlot ||
-                    selectedBooking.machineNumber !== booking.machineNumber
-            );
-        }
-
-        // Update selectedBookings
-        setSelectedBookings(() => updatedSelectedBookings);
-        setSelected(!selected);
-        */
     };
 
     const style = {

@@ -13,8 +13,7 @@ function ConfirmBookingButton() {
         selectedDateString,
     } = useBookingContext();
 
-    const { updateAndFetchBookings, deleteAndFetchBookings, status } =
-        useBookings();
+    const { postBookings, deleteBookings, status } = useBookings();
 
     // Used to perform booking without backend
     const performBookingLocal = () => {
@@ -80,7 +79,7 @@ function ConfirmBookingButton() {
             }
         );
         // Send selectedBookings to backend
-        updateAndFetchBookings(updatedSelectedBookings);
+        postBookings(updatedSelectedBookings);
     };
 
     const performUnbooking = () => {
@@ -95,7 +94,7 @@ function ConfirmBookingButton() {
             }
         );
         // Send selectedBookings to backend
-        deleteAndFetchBookings(updatedSelectedBookings);
+        deleteBookings(updatedSelectedBookings);
     };
     // Send selectedBookings to backend
     //  sendBookingsToBackend(updatedSelectedBookings);
