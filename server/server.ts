@@ -35,12 +35,28 @@ const printBookingArray = (bookings: Booking[]) => {
 let existingBookings: Booking[] = [];
 
 const app = express();
-const port = 3000;
+app.use(cors());
+app.use(express.json());
+
 
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: "*", // Allow all origins
+        methods: ["GET", "POST", "DELETE"]
+    }
+
+});
+const port = 3000;
+
+io.on("connection", (socket) => {
+    socket.emit("bookings", existingBookings);
+})
+
+// Before implementation of realtime updates
+/*
 app.use(cors())
-app.use(express.json());
+*/
 
 // Request to get all bookings for a given date
 app.get("/bookings", (req: Request, res: Response) => {
@@ -50,7 +66,8 @@ app.get("/bookings", (req: Request, res: Response) => {
 
 // Request to add a set of bookings to the server
 app.post("/bookings", (req: Request, res: Response) => {
-    console.log("Post request recieved")
+    console.log("Post request recieved");
+    console.log("request: ", req.body);
     const recievedBookings = req.body.bookings;
     const nonConflictingBookings = filterNonConflictingBookings(recievedBookings, existingBookings);
 
@@ -67,13 +84,13 @@ app.post("/bookings", (req: Request, res: Response) => {
         res.status(201).send( { bookings : nonConflictingBookings })
     }
     existingBookings = [...existingBookings, ...nonConflictingBookings];
-
     io.emit("newBookings", nonConflictingBookings)
 });
 
 // Request to delete a set of bookings from the server
 app.delete("/bookings", (req: Request, res: Response) => {
     console.log("Delete request recieved")
+    console.log("request: ", req.body);
     const clientPersonName = req.body.clientPersonName;
     const  recievedBookings = req.body.bookings;
     // Get the stored bookings that are at the same time as the recieved bookings
@@ -98,8 +115,9 @@ app.delete("/bookings", (req: Request, res: Response) => {
     }
     // Remove the filtered bookings from the stored bookings
     existingBookings = existingBookings.filter(booking => !bookingsToRemove.some(bookingToRemove => bookingToRemove.timeSlot === booking.timeSlot && bookingToRemove.machineNumber === booking.machineNumber && bookingToRemove.dateString === booking.dateString));
+    io.emit("removedBookings", bookingsToRemove)
 })
 
-app.listen(port, () => {
+server.listen(port, "0.0.0.0", () => {
     console.log(`Server is listening on port ${port}`);
 })

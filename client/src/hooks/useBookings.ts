@@ -1,25 +1,38 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Booking from "../interfaces/Booking";
 import { useBookingContext } from "../contexts/BookingContext";
+import io from "socket.io-client";
 
+const ipAdressString = "localhost";
+const portString = "3000";
+const baseUrl = `http://${ipAdressString}:${portString}`;
 
 function useBookings() {
     const [status, setStatus] = useState<string>("idle");
     const { personName, existingBookings, setExistingBookings, setSelectedBookings } = useBookingContext();
-    
-    const filterConflictingBookings = (recievedBookings: Booking[], existingBookings: Booking[]) => {
-        return recievedBookings.filter((newBooking: { timeSlot: string; machineNumber: number; dateString: string; }) => {
-            return existingBookings.some(existingBooking => {
-                return existingBooking.timeSlot === newBooking.timeSlot && existingBooking.machineNumber === newBooking.machineNumber && existingBooking.dateString === newBooking.dateString;
-            });
+
+    useEffect(() => {
+        const socket = io(baseUrl);
+        
+        socket.on("newBookings", (newBookings: Booking[]) => {
+            setExistingBookings((currentBookings) => [...currentBookings, ...newBookings]);
         });
-    }
+
+        socket.on("removedBookings", (removedBookings: Booking[]) => {
+            setExistingBookings((prevBookings) => prevBookings.filter((booking) => !removedBookings.some((removedBooking) => removedBooking.timeSlot === booking.timeSlot && removedBooking.machineNumber === booking.machineNumber && removedBooking.dateString === booking.dateString)));
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
 
     // Codes:
     // 200: Bookings were successfully fetched
-    async function fetchBookings() {
+    // Response body: All bookings stored on the server
+    async function fetchBookings(): Promise<void> {
         setStatus("loading");
-        const url = "http://localhost:3000/bookings";
+        const url = `${baseUrl}/bookings`;
         try {
             const response = await fetch(url, {
                 method: "GET",
@@ -45,14 +58,14 @@ function useBookings() {
     // 200: All bookings were successfully added to server
     // 201: Some bookings were conflicting
     // 409: All bookings were conflicting
-    // Response: Array of bookings that were added (and not conflicting)
-    async function postBookings(bookings: Booking[]) {
+    // Response body: Array of bookings that were added (and not conflicting)
+    async function postBookings(bookings: Booking[]): Promise<void> {
         // Check if there are any bookings to update
         if (bookings.length === 0) {
             return;
         }
         setStatus("loading");
-        const url = 'http://localhost:3000/bookings';
+        const url = `${baseUrl}/bookings`;
         try {
             const response = await fetch(url, {
                 method: "POST",
@@ -93,9 +106,10 @@ function useBookings() {
     // 200: All bookings were successfully deleted
     // 201: Some bookings were deleted
     // 404: None of the bookings were deleted
-    async function deleteBookings(bookings: Booking[]) {
+    // Response body: Array of bookings that were not deleted
+    async function deleteBookings(bookings: Booking[]): Promise<void> {
         setStatus("loading");
-        const url = 'http://localhost:3000/bookings';
+        const url = `${baseUrl}/bookings`;
 
         try {
             const response = await fetch(url, {
