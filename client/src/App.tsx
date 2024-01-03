@@ -1,10 +1,20 @@
-import { BookingProvider } from "./contexts/BookingContext";
 import Datefield from "./components/Datefield.tsx";
 import NameInput from "./components/NameInput.tsx";
 import TimeTable from "./components/TimeTable.tsx";
 import ConfirmBookingButton from "./components/ConfirmBookingButton.tsx";
+import { useEffect } from "react";
+import useBookings from "./hooks/useBookings.ts";
 
 function App() {
+    // const { existingBookings, setExistingBookings } = useBookingContext();
+    const { loadBookings } = useBookings();
+
+    // Fetch bookings from the server when the component mounts
+    useEffect(() => {
+        console.log("App rendered");
+        loadBookings();
+    }, []);
+
     const titleString: string = "Vaskeriliste".toUpperCase();
     const instructionString1: string =
         "Skriv deg opp på listen for å reservere vasketimer. Maksimalt en uke i forveien.".toUpperCase();
@@ -13,15 +23,13 @@ function App() {
 
     return (
         <>
-            <BookingProvider>
-                <h1>{titleString}</h1>
-                <p>{instructionString1}</p>
-                <p>{instructionString2}</p>
-                <Datefield />
-                <NameInput />
-                <TimeTable />
-                <ConfirmBookingButton />
-            </BookingProvider>
+            <h1>{titleString}</h1>
+            <p>{instructionString1}</p>
+            <p>{instructionString2}</p>
+            <Datefield />
+            <NameInput />
+            <TimeTable />
+            <ConfirmBookingButton />
         </>
     );
 }

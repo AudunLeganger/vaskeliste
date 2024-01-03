@@ -1,17 +1,10 @@
-import { useEffect } from "react";
 import { useBookingContext } from "../contexts/BookingContext";
-import useBookings from "../hooks/useBookings";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 function Datefield() {
     const { selectedDateString, setSelectedDateString, setSelectedBookings } =
         useBookingContext();
-    const { fetchBookings } = useBookings();
-
-    useEffect(() => {
-        fetchBookings();
-    }, []);
 
     const handleDateChange = (date: Date) => {
         const dateString = date.toISOString().split("T")[0];

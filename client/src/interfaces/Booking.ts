@@ -1,4 +1,4 @@
-interface Booking {
+export interface Booking {
     timeSlot: string;
     machineNumber: number;
     personName: string;

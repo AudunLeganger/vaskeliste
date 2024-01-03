@@ -1,46 +1,18 @@
 import useBookings from "../hooks/useBookings";
-import Booking, { SelectedBooking } from "../interfaces/Booking";
 import { useBookingContext } from "../contexts/BookingContext";
 
 function ConfirmBookingButton() {
-    const {
-        selectedBookings,
-        setSelectedBookings,
-        personName,
-        bookingMode,
-        selectedDateString,
-    } = useBookingContext();
+    const { selectedBookings, bookingMode } = useBookingContext();
 
-    const { postBookings, deleteBookings } = useBookings();
+    const { addBookings, deleteSelectedBookings } = useBookings();
 
     const performBooking = () => {
         // Add personName and date to each booking in selectedBookings
-        const updatedSelectedBookings: Booking[] = selectedBookings.map(
-            (selectedBooking: SelectedBooking) => {
-                return {
-                    ...selectedBooking,
-                    personName,
-                    dateString: selectedDateString,
-                };
-            }
-        );
-        // Send selectedBookings to backend
-        postBookings(updatedSelectedBookings);
+        addBookings();
     };
 
     const performUnbooking = () => {
-        // Removed the selected bookings from existingBookings
-        const updatedSelectedBookings: Booking[] = selectedBookings.map(
-            (selectedBooking: SelectedBooking) => {
-                return {
-                    ...selectedBooking,
-                    personName,
-                    dateString: selectedDateString,
-                };
-            }
-        );
-        // Send selectedBookings to backend
-        deleteBookings(updatedSelectedBookings);
+        deleteSelectedBookings();
     };
 
     function handleClick() {
@@ -49,7 +21,6 @@ function ConfirmBookingButton() {
         } else {
             performUnbooking();
         }
-        setSelectedBookings(() => []);
     }
 
     return (

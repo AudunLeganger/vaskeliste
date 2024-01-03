@@ -1,9 +1,6 @@
 import BookingField from "./BookingField";
-import useBookings from "../hooks/useBookings";
-import { useEffect } from "react";
 
 function TimeTable() {
-    console.log("TimeTable rendered");
     // Define the machine names
     const machines = [
         "Maskin 1",
