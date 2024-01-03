@@ -44,13 +44,14 @@ function useBookings() {
     const [status, setStatus] = useState<string>("idle");
     const {
         personName,
-        selectedDateString,
+        selectedDate,
         selectedBookings,
         existingBookings,
         setExistingBookings,
         setSelectedBookings,
     } = useBookingContext();
 
+    const selectedDateString = selectedDate.toISOString().split("T")[0];
     useSocket(
         (newBookings) => {
             const mergedBookings = mergeBookings(existingBookings, newBookings);
@@ -68,10 +69,13 @@ function useBookings() {
     async function loadBookings(): Promise<void> {
         setStatus("loading");
         try {
+            console.log("trying to LOAD bookings");
+
             const bookings = await fetchBookings();
+            console.log("loadBookings:", bookings);
             setExistingBookings(() => bookings);
             setStatus("success");
-            console.log("Bookings loaded: ", bookings);
+            console.log("successfully LOADED bookings");
         } catch (error) {
             console.error("Error fetching bookings", error);
             setStatus("error");
@@ -93,11 +97,18 @@ function useBookings() {
             console.log("Posted bookings: ", postedBookings);
             setExistingBookings(() => [...existingBookings, ...postedBookings]);
             setStatus("success");
-            setSelectedBookings([]);
         } catch (error) {
             console.error("Error fetching bookings", error);
-            setStatus("error");
+            if (error instanceof Error) {
+                if (error.message === "409" || error.message === "201") {
+                    setStatus("conflict");
+                } else {
+                    setStatus("error");
+                }
+            }
+            loadBookings();
         }
+        setSelectedBookings(() => []);
     }
 
     async function deleteSelectedBookings(): Promise<void> {
@@ -118,11 +129,11 @@ function useBookings() {
                 removeDeletedBookings(existingBookings, deletedBookings)
             );
             setStatus("success");
-            setSelectedBookings([]);
         } catch (error) {
             console.error("Error fetching bookings", error);
             setStatus("error");
         }
+        setSelectedBookings(() => []);
     }
 
     return { loadBookings, addBookings, deleteSelectedBookings, status };

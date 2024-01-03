@@ -15,10 +15,13 @@ function BookingField({
         setSelectedBookings,
         existingBookings,
         personName: inputPersonName,
-        selectedDateString,
+        selectedDate,
         bookingMode,
         setBookingMode,
     } = useBookingContext();
+
+    const selectedDateString = selectedDate.toISOString().split("T")[0];
+
     // If it exists, get an existing booking for the current time slot and machine number
     const isExistingBooking = existingBookings.some(
         (booking) =>

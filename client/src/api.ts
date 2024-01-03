@@ -8,12 +8,14 @@ const url = `http://${ipAdressString}:${portString}/api/bookings`;
 // 200: Bookings were successfully fetched
 // Response body: All bookings stored on the server
 async function fetchBookings(): Promise<Booking[]> {
+    console.log("Trying to FETCH Bookings");
     const response = await fetch(url, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
     });
+    console.log("GOT A RESPONSE");
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.statusText}`);
     }
@@ -37,18 +39,8 @@ async function postBookings(bookingsToPost: Booking[]): Promise<Booking[]> {
         },
         body: JSON.stringify({ bookings: bookingsToPost }),
     });
-
-    if (response.status === 200) {
-        // No bookings were conflicting
-        console.log("Success! No bookings were conflicting");
-    } else if (response.status === 201) {
-        // Some bookings were conflicting
-        console.log("Some bookings were conflicting: ");
-    } else if (response.status === 409) {
-        // All bookings were conflicting
-        console.log("All bookings were conflicting");
-    } else {
-        throw new Error(`HTTP error! status: ${response.statusText}`);
+    if (response.status !== 200) {
+        throw new Error(response.status.toString());
     }
     return response.json();
 }

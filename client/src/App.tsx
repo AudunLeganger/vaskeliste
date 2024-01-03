@@ -4,6 +4,7 @@ import TimeTable from "./components/TimeTable.tsx";
 import ConfirmBookingButton from "./components/ConfirmBookingButton.tsx";
 import { useEffect } from "react";
 import useBookings from "./hooks/useBookings.ts";
+import Dayfield from "./components/Dayfield.tsx";
 
 function App() {
     // const { existingBookings, setExistingBookings } = useBookingContext();
@@ -27,6 +28,7 @@ function App() {
             <p>{instructionString1}</p>
             <p>{instructionString2}</p>
             <Datefield />
+            <Dayfield />
             <NameInput />
             <TimeTable />
             <ConfirmBookingButton />

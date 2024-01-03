@@ -3,15 +3,14 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 function Datefield() {
-    const { selectedDateString, setSelectedDateString, setSelectedBookings } =
+    const { selectedDate, setSelectedDate, setSelectedBookings } =
         useBookingContext();
 
     const handleDateChange = (date: Date) => {
-        const dateString = date.toISOString().split("T")[0];
-        if (dateString === selectedDateString) {
+        if (date === selectedDate) {
             return;
         }
-        setSelectedDateString(() => dateString);
+        setSelectedDate(() => date);
 
         // Clear selectedBookings
         setSelectedBookings(() => []);
@@ -29,11 +28,12 @@ function Datefield() {
         <>
             <span>Dato: </span>
             <DatePicker
-                selected={new Date(selectedDateString)}
+                selected={selectedDate}
                 onChange={handleDateChange}
                 minDate={oneWeekAgo}
                 maxDate={oneWeekAhead}
                 calendarStartDay={1}
+                dateFormat="dd.MM.yyyy"
             />
         </>
     );
