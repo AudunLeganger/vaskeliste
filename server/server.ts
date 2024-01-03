@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
+import { MongoClient } from "mongodb";
 
 interface Booking {
     timeSlot: string;
@@ -9,6 +10,8 @@ interface Booking {
     dateString: string;
     personName: string;
 }
+
+let existingBookings: Booking[] = [];
 
 const filterNonConflictingBookings = (
     recievedBookings: Booking[],
@@ -62,8 +65,6 @@ const printBookingArray = (bookings: Booking[]) => {
         );
     });
 };
-
-let existingBookings: Booking[] = [];
 
 const app = express();
 app.use(cors());

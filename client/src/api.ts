@@ -3,6 +3,7 @@ import { Booking } from "./interfaces/Booking";
 const ipAdressString = "localhost";
 const portString = "3000";
 const url = `http://${ipAdressString}:${portString}/api/bookings`;
+// const url = "https://9c13-217-118-58-237.ngrok-free.app";
 
 // Codes:
 // 200: Bookings were successfully fetched
