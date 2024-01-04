@@ -1,16 +1,12 @@
 import { Booking } from "./interfaces/Booking";
-
-const ipAdressString = "localhost";
-const portString = "3000";
-const url = `http://${ipAdressString}:${portString}/api/bookings`;
-// const url = "https://9c13-217-118-58-237.ngrok-free.app";
+import { API_URL } from "../constants";
 
 // Codes:
 // 200: Bookings were successfully fetched
 // Response body: All bookings stored on the server
 async function fetchBookings(): Promise<Booking[]> {
     console.log("Trying to FETCH Bookings");
-    const response = await fetch(url, {
+    const response = await fetch(API_URL, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -33,7 +29,7 @@ async function postBookings(bookingsToPost: Booking[]): Promise<Booking[]> {
     if (bookingsToPost.length === 0) {
         return Promise.resolve([]);
     }
-    const response = await fetch(url, {
+    const response = await fetch(API_URL, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -58,7 +54,7 @@ async function deleteBookings(
     if (bookingsToDelete.length === 0) {
         return Promise.resolve([]);
     }
-    const response = await fetch(url, {
+    const response = await fetch(API_URL, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
