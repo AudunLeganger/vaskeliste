@@ -115,7 +115,7 @@ function BookingField({
         }
     };
 
-    const style = {
+    const style: React.CSSProperties = {
         color: "black",
         backgroundColor:
             isSelected && !bookingMode
@@ -128,7 +128,10 @@ function BookingField({
         width: "10em",
         height: "2em",
         overflow: "hidden",
-        border: "2px solid black",
+        border: "2px solid",
+        borderRadius: "1px",
+        textAlign: "center",
+        cursor: "pointer",
     };
 
     return (

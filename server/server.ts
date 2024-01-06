@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
+import { SERVER_PORT } from "./constants";
 import { MongoClient } from "mongodb";
 
 interface Booking {
@@ -159,5 +160,5 @@ app.delete("/api/bookings", (req: Request, res: Response) => {
 });
 
 server.listen(port, "0.0.0.0", () => {
-    console.log(`Server is listening on port ${port}`);
+    console.log(`Server is listening on port ${SERVER_PORT}`);
 });

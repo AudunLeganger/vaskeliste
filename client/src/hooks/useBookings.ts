@@ -27,15 +27,15 @@ function mergeBookings(
 // Helper function to remove deleted bookings from existing bookings. Returns a new array with the deleted bookings removed.
 function removeDeletedBookings(
     existingBookings: Booking[],
-    deletedBookings: Booking[]
+    bookingsToDelete: Booking[]
 ): Booking[] {
     return existingBookings.filter(
         (booking) =>
-            !deletedBookings.some(
-                (deletedBooking) =>
-                    deletedBooking.timeSlot === booking.timeSlot &&
-                    deletedBooking.machineNumber === booking.machineNumber &&
-                    deletedBooking.dateString === booking.dateString
+            !bookingsToDelete.some(
+                (bookingToDelete) =>
+                    bookingToDelete.timeSlot === booking.timeSlot &&
+                    bookingToDelete.machineNumber === booking.machineNumber &&
+                    bookingToDelete.dateString === booking.dateString
             )
     );
 }
@@ -49,6 +49,7 @@ function useBookings() {
         existingBookings,
         setExistingBookings,
         setSelectedBookings,
+        setBookingMode,
     } = useBookingContext();
 
     const selectedDateString = selectedDate.toISOString().split("T")[0];
@@ -108,7 +109,7 @@ function useBookings() {
             }
             loadBookings();
         }
-        setSelectedBookings(() => []);
+        clearSelectedBookings();
     }
 
     async function deleteSelectedBookings(): Promise<void> {
@@ -133,10 +134,21 @@ function useBookings() {
             console.error("Error fetching bookings", error);
             setStatus("error");
         }
-        setSelectedBookings(() => []);
+        clearSelectedBookings();
     }
 
-    return { loadBookings, addBookings, deleteSelectedBookings, status };
+    function clearSelectedBookings(): void {
+        setSelectedBookings(() => []);
+        setBookingMode(true);
+    }
+
+    return {
+        loadBookings,
+        addBookings,
+        deleteSelectedBookings,
+        clearSelectedBookings,
+        status,
+    };
 }
 
 export default useBookings;

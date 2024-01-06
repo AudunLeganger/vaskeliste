@@ -1,11 +1,11 @@
 import { Booking } from "./interfaces/Booking";
 import { API_URL } from "../constants";
-
 // Codes:
 // 200: Bookings were successfully fetched
 // Response body: All bookings stored on the server
 async function fetchBookings(): Promise<Booking[]> {
     console.log("Trying to FETCH Bookings");
+    console.log("API_URL: ", API_URL);
     const response = await fetch(API_URL, {
         method: "GET",
         headers: {

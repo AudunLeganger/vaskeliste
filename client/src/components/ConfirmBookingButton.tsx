@@ -6,20 +6,11 @@ function ConfirmBookingButton() {
 
     const { addBookings, deleteSelectedBookings } = useBookings();
 
-    const performBooking = () => {
-        // Add personName and date to each booking in selectedBookings
-        addBookings();
-    };
-
-    const performUnbooking = () => {
-        deleteSelectedBookings();
-    };
-
     function handleClick() {
         if (bookingMode) {
-            performBooking();
+            addBookings();
         } else {
-            performUnbooking();
+            deleteSelectedBookings();
         }
     }
 

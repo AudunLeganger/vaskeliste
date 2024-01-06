@@ -1,14 +1,15 @@
 import { Booking } from "./../interfaces/Booking";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
-import { API_URL } from "../../constants";
+import { SOCKET_URL } from "../../constants";
 
 export function useSocket(
     onNewBookings: (newBookings: Booking[]) => void,
     onRemovedBookings: (removedBookings: Booking[]) => void
-) {
+): void {
     useEffect(() => {
-        const socket = io(API_URL);
+        // console.log(SOCKET_URL);
+        const socket = io(SOCKET_URL);
 
         socket.on("newBookings", onNewBookings);
         socket.on("removedBookings", onRemovedBookings);
